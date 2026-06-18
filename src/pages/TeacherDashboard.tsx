@@ -13,8 +13,11 @@ import { DashboardSkeleton } from "../components/DashboardSkeleton";
 import { GlobalActivityFeed } from "../components/GlobalActivityFeed";
 import { EditDeckModal } from "../components/EditDeckModal";
 import { v4 as uuidv4 } from "uuid";
+import ApiHealthMonitor from "./ApiHealthMonitor";
 
 export default function TeacherDashboard() {
+  const [showAdminMonitor, setShowAdminMonitor] = useState(false);
+
   useEffect(() => {
     document.title = "Henosis - Teacher Dashboard";
   }, []);
@@ -755,10 +758,10 @@ export default function TeacherDashboard() {
            {(user?.role === "teacher" || user?.role === "admin" || user?.role === "Admin") && (
              <div className="hidden md:block">
                <p className="text-sm font-bold opacity-60 uppercase mb-1">System Health</p>
-               <Link to="/admin/monitor" className="inline-flex items-center gap-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-100 dark:border-zinc-700 px-4 py-2 rounded-xl transition text-sm font-bold">
+               <button onClick={() => setShowAdminMonitor(!showAdminMonitor)} className={cn("inline-flex items-center gap-2 border px-4 py-2 rounded-xl transition text-sm font-bold", showAdminMonitor ? "bg-orange-500 text-white border-orange-600 dark:bg-orange-600 dark:border-orange-500" : "bg-zinc-100 hover:bg-zinc-200 text-zinc-900 border-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-100 dark:border-zinc-700")}>
                  <Settings className="w-4 h-4" />
                  Giám Sát Hệ Thống & Agent
-               </Link>
+               </button>
              </div>
            )}
         </div>
@@ -767,10 +770,10 @@ export default function TeacherDashboard() {
 
       {(user?.role === "teacher" || user?.role === "admin" || user?.role === "Admin") && (
         <div className="md:hidden flex flex-col gap-2">
-          <Link to="/admin/monitor" className="inline-flex items-center gap-2 bg-zinc-100/50 hover:bg-zinc-200/50 text-zinc-900 dark:bg-zinc-800/50 dark:hover:bg-zinc-700/50 dark:text-zinc-100 px-4 py-3 rounded-xl transition text-sm font-bold w-full justify-center border border-zinc-200 dark:border-zinc-800">
+          <button onClick={() => setShowAdminMonitor(!showAdminMonitor)} className={cn("inline-flex items-center gap-2 px-4 py-3 rounded-xl transition text-sm font-bold w-full justify-center border", showAdminMonitor ? "bg-orange-500 text-white border-orange-600" : "bg-zinc-100/50 hover:bg-zinc-200/50 text-zinc-900 dark:bg-zinc-800/50 dark:hover:bg-zinc-700/50 dark:text-zinc-100 border-zinc-200 dark:border-zinc-800")}>
             <Settings className="w-4 h-4" />
             Giám Sát Hệ Thống & Agent
-          </Link>
+          </button>
           <button
              onClick={async () => {
                 try {
@@ -807,6 +810,12 @@ export default function TeacherDashboard() {
           >
             <LogOut className="w-4 h-4" /> Đăng Xuất
           </button>
+        </div>
+      )}
+
+      {showAdminMonitor && (
+        <div className="glass p-6 rounded-3xl border border-orange-500/30 w-full overflow-hidden animate-in fade-in slide-in-from-top-4">
+           <ApiHealthMonitor />
         </div>
       )}
 

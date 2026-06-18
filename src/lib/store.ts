@@ -212,28 +212,32 @@ export function syncLocalUserDecks() {
   const userId = currentUser?.id || "guest";
   const localUserDecksKey = `local_user_decks_${userId}`;
   const savedStr = localStorage.getItem(localUserDecksKey);
+  
+  if (!currentUser) {
+      // If logging out or guest, reset to system decks only
+      const systemDecks = [
+        "deck_1", "deck_phil_2", "deck_math_1", "deck_math_2", "deck_physics_1", "deck_physics_2", "daily-quest", "remind-later-deck"
+      ];
+      decks = decks.filter(d => systemDecks.includes(d.id));
+  }
+  
   if (savedStr) {
     try {
       const loadedDecks: Deck[] = JSON.parse(savedStr);
       if (Array.isArray(loadedDecks)) {
-        const systemDecks = [
-          "deck_1", "deck_phil_2", "deck_math_1", "deck_math_2", "deck_physics_1", "deck_physics_2"
-        ];
-        decks = decks.filter(d => systemDecks.includes(d.id));
-        loadedDecks.forEach(customDeck => {
-           if (!decks.some(d => d.id === customDeck.id)) {
-              decks.push(customDeck);
-           }
-        });
+         loadedDecks.forEach(customDeck => {
+            const existingIdx = decks.findIndex(d => d.id === customDeck.id);
+            if (existingIdx !== -1) {
+                // Do not blindly overwrite if the memory one is from cloud and richer, but merge
+                decks[existingIdx] = { ...customDeck, ...decks[existingIdx] };
+            } else {
+                decks.push(customDeck);
+            }
+         });
       }
     } catch (e) {
       console.error("Failed to sync local user decks:", e);
     }
-  } else {
-    const systemDecks = [
-      "deck_1", "deck_phil_2", "deck_math_1", "deck_math_2", "deck_physics_1", "deck_physics_2"
-    ];
-    decks = decks.filter(d => systemDecks.includes(d.id));
   }
 }
 

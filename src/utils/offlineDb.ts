@@ -94,6 +94,7 @@ export async function saveCourseOffline(course: any): Promise<void> {
       ...course,
       courseId: course.courseId || course.id,
       downloadedAt: new Date().toISOString(),
+      isAvailableOffline: true
     };
     const request = storeObj.put(data);
 
