@@ -1012,7 +1012,11 @@ export default function StudyRoom() {
       !finalWeakIds.every(id => weakCardIds.includes(id));
       
     if (hasDiff) {
-      localStorage.setItem(storageKey, JSON.stringify(finalWeakIds));
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(finalWeakIds));
+      } catch(e) {
+        console.warn("Storage Quota Exceeded", e);
+      }
       setWeakCardIds(finalWeakIds);
     }
   }, [deck, weakCardIds]);
@@ -1080,7 +1084,11 @@ export default function StudyRoom() {
   useEffect(() => {
     if (deck && currentIndex !== undefined && currentIndex >= 0) {
       const progressKey = `study_progress_${user?.id || "guest"}_${deck.id}`;
-      localStorage.setItem(progressKey, currentIndex.toString());
+      try {
+        localStorage.setItem(progressKey, currentIndex.toString());
+      } catch (e) {
+        console.warn("Storage Quota Exceeded", e);
+      }
     }
   }, [currentIndex, deck, user?.id]);
 
@@ -1485,7 +1493,11 @@ export default function StudyRoom() {
             weakIds = weakIds.filter((id: string) => id !== currentCard.id);
           }
 
-          localStorage.setItem(storageKey, JSON.stringify(weakIds));
+          try {
+            localStorage.setItem(storageKey, JSON.stringify(weakIds));
+          } catch(e) {
+            console.warn("Storage Quota Exceeded", e);
+          }
           setWeakCardIds(weakIds);
         }
 
