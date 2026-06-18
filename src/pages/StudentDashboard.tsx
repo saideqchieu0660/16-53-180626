@@ -639,7 +639,7 @@ export default function StudentDashboard() {
     if (!user) return;
     if (unsubDecksRef.current) unsubDecksRef.current();
     try {
-      const unsub = onSnapshot(collection(db, "sets"), (snapshot) => {
+      const unsub = onSnapshot(collection(db, "sets"), async (snapshot) => {
         const list: Deck[] = [];
         snapshot.forEach((docSnap) => {
           const data = docSnap.data() as any;
@@ -663,10 +663,30 @@ export default function StudentDashboard() {
             list.push({ ...data, id: data.id || docSnap.id } as Deck);
           }
         });
+        
+        try {
+           const { getAllOfflineDecks } = await import('../utils/offlineDb');
+           const offlineDecks = await getAllOfflineDecks();
+           offlineDecks.forEach(offDeck => {
+              if (!list.some(d => d.id === offDeck.id)) {
+                 list.push(offDeck);
+              }
+           });
+        } catch(e) {}
+
         setRawDecks(list);
         setIsInitialLoading(false);
-      }, (err) => {
+      }, async (err) => {
         handleFirestoreError(err, OperationType.GET, "sets");
+        
+        try {
+           const { getAllOfflineDecks } = await import('../utils/offlineDb');
+           const offlineDecks = await getAllOfflineDecks();
+           if (offlineDecks.length > 0) {
+              setRawDecks(offlineDecks);
+           }
+        } catch(e) {}
+        
         setIsInitialLoading(false);
       });
       unsubDecksRef.current = unsub;

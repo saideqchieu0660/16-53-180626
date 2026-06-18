@@ -461,6 +461,39 @@ const safeSetItem = (key: string, value: string) => {
                               
                               {subject !== "📌 ĐÃ GHIM" && (
                                 <button
+                                  onClick={async () => {
+                                    if (!navigator.onLine) {
+                                      toast.error("Bạn đang offline, không thể tải xuống danh mục.");
+                                      return;
+                                    }
+                                    const { downloadCourseForOffline } = await import('../utils/offlineDb');
+                                    let successCount = 0;
+                                    const loadingToast = toast.loading(`Đang tải xuống ${subjectDecks.length} học phần...`);
+                                    for (const deck of subjectDecks) {
+                                      try {
+                                        await downloadCourseForOffline(deck.id);
+                                        successCount++;
+                                      } catch (err) {
+                                        console.error(`Failed to download ${deck.id}:`, err);
+                                      }
+                                    }
+                                    toast.dismiss(loadingToast);
+                                    if (successCount > 0) {
+                                      toast.success(`Đã tải xuống thành công ${successCount}/${subjectDecks.length} học phần.`);
+                                      window.dispatchEvent(new Event('henosis-offline-update'));
+                                    } else {
+                                      toast.error("Tải xuống thất bại. Vui lòng thử lại.");
+                                    }
+                                  }}
+                                  className="text-zinc-400 hover:text-emerald-500 p-1.5 rounded-lg hover:bg-emerald-100 dark:hover:bg-zinc-800 transition"
+                                  title="Tải toàn bộ bộ học trong phân mục này để học offline"
+                                >
+                                  <DownloadCloud className="w-5 h-5" />
+                                </button>
+                              )}
+
+                              {subject !== "📌 ĐÃ GHIM" && (
+                                <button
                                   onClick={() => {
                                     const categoryUrl = `${window.location.origin}/category/${encodeURIComponent(subject)}`;
                                     const shareText = `📚 Danh mục: ${subject}\n👉 Truy cập toàn bộ thẻ: ${categoryUrl}`;

@@ -1783,50 +1783,12 @@ export default function AdminKeysDashboard() {
         </h1>
       </div>
 
-      <div className="flex flex-col items-center justify-center py-20">
-        <Server className="w-24 h-24 text-zinc-300 dark:text-zinc-700 mb-6" />
-        <h2 className="text-2xl font-bold text-zinc-800 dark:text-zinc-200 mb-2">System Infrastructure</h2>
-        <p className="text-zinc-500 max-w-md text-center mb-8">
-          The real-time telemetry metrics and massive monitoring sub-systems are currently suspended to maintain 120 FPS UI performance.
-        </p>
-
-        <button 
-          onClick={() => setIsCommandCenterOpen(true)}
-          className="group relative inline-flex items-center gap-3 px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold shadow-lg shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95"
-        >
-          <Activity className="w-6 h-6 group-hover:animate-pulse" />
-          <span>Open System Command Center</span>
-          <div className="absolute inset-0 bg-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity blur"></div>
-        </button>
-      </div>
-
-      {isCommandCenterOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-hidden animate-in fade-in duration-300">
-          <div className="bg-white dark:bg-zinc-950 w-full max-w-6xl h-full max-h-[90vh] rounded-3xl shadow-2xl flex flex-col border border-emerald-500/30 overflow-hidden relative">
-            <div className="flex items-center justify-between p-6 border-b border-zinc-200 dark:border-zinc-800 shrink-0 bg-emerald-500/5">
-              <h2 className="text-2xl font-bold flex items-center gap-3 text-emerald-600 dark:text-emerald-400">
-                <Cpu className="w-6 h-6 animate-pulse" />
-                Live Command Center
-              </h2>
-              <button 
-                onClick={() => setIsCommandCenterOpen(false)}
-                className="p-2 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 bg-zinc-100 dark:bg-zinc-900"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-            
-            <div className="flex-1 overflow-y-auto p-6 scroll-smooth">
-              <div className="space-y-8 pb-10">
-                <ServiceMonitor adminKey={adminKey} isOpen={isCommandCenterOpen} />
-                <div className="border-t border-zinc-200 dark:border-zinc-800 pt-8 mt-8">
-                  <AIPromptsEditorWidget />
-                </div>
-              </div>
-            </div>
-          </div>
+      <div className="space-y-8 pb-10">
+        <ServiceMonitor adminKey={adminKey} isOpen={true} />
+        <div className="border-t border-zinc-200 dark:border-zinc-800 pt-8 mt-8">
+          <AIPromptsEditorWidget />
         </div>
-      )}
+      </div>
     </div>
   );
 }
