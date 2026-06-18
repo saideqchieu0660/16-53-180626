@@ -392,11 +392,33 @@ export const store = {
            const { OfflineSyncQueue } = await import('./offlineSync');
            const pendingItems = JSON.parse(localStorage.getItem("costudy_offline_sync_queue") || "[]");
            
-           // Apply latest profile changes (like streakFreeze, etc.)
+           // Apply latest profile changes (like streakFreeze, etc.) with MONOTONIC MERGE and SET UNION
            const latestPendingProfile = pendingItems.slice().reverse().find((i: any) => i.type === "userProfile" && i.uid === firebaseUser.uid);
            if (latestPendingProfile && latestPendingProfile.payload) {
-              console.warn("Hydrating from PENDING QUEUE payload instead of outdated cloud profile to prevent data loss.");
-              profile = { ...profile, ...latestPendingProfile.payload };
+              console.warn("Hydrating from PENDING QUEUE payload with Monotonic protections applied.");
+              
+              const payload = latestPendingProfile.payload;
+              const cloudRole = profile?.role || "student";
+              const localRole = payload.role || "student";
+              const mergedRole = (cloudRole === "Admin" || cloudRole === "admin" || cloudRole === "teacher") ? cloudRole : localRole;
+
+              const mergedBorders = [...new Set([...(payload.unlockedCustomBorders || []), ...(profile?.unlockedCustomBorders || [])])];
+              const mergedTitles  = [...new Set([...(payload.unlockedCustomTitles || []), ...(profile?.unlockedCustomTitles || [])])];
+              
+              const mergedXP = Math.max((profile?.points || 0), (payload.points || 0));
+              const mergedLevel = Math.max((profile?.level || 1), (payload.level || 1));
+              const mergedStreak = Math.max((profile?.streak || 0), (payload.streak || 0));
+
+              profile = { 
+                 ...profile, 
+                 ...payload,
+                 role: mergedRole,
+                 points: mergedXP,
+                 level: mergedLevel,
+                 streak: mergedStreak,
+                 unlockedCustomBorders: mergedBorders,
+                 unlockedCustomTitles: mergedTitles
+              };
            }
            
            // Apply pending points delta (only those that occurred AFTER the latest userProfile payload, if any)
@@ -1055,10 +1077,12 @@ export const store = {
      ef = ef + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
      if (ef < 1.3) ef = 1.3;
 
+     const nowStr = new Date().toISOString();
      card.repetitionCount = rep;
      card.easeFactor = ef;
      card.interval = inter;
      card.isNewCard = false;
+     card.updatedAt = nowStr;
      card.nextReviewDate = Date.now() + (inter * 86400000); // interval to milliseconds
 
      const masteryChange = card.mastery - oldMastery;
@@ -1074,7 +1098,8 @@ export const store = {
              easeFactor: card.easeFactor,
              isNewCard: card.isNewCard,
              isWeakCard: card.isHard,
-             lastPointAwarded: card.lastPointAwarded
+             lastPointAwarded: card.lastPointAwarded,
+             updatedAt: nowStr
          };
 
          import('./offlineSync').then(({ OfflineSyncQueue }) => {

@@ -17,7 +17,7 @@ import TeacherDashboard from "./pages/TeacherDashboard";
 import StudyRoom from "./pages/StudyRoom";
 import CoStudyRoom from "./pages/CoStudyRoom";
 import SetupProfileScreen from "./pages/SetupProfileScreen";
-import AdminKeysDashboard from "./pages/AdminKeysDashboard";
+import ApiHealthMonitor from "./pages/ApiHealthMonitor";
 import AdminCreateCards from "./pages/AdminCreateCards";
 import VerifyEmailScreen from "./components/VerifyEmailScreen";
 import CategoryView from "./pages/CategoryView";
@@ -1605,7 +1605,7 @@ export default function App() {
             <Route path="/study/:deckId" element={<PageWrapper><StudyRoom /></PageWrapper>} />
             <Route path="/co-study" element={<PageWrapper><CoStudyRoom /></PageWrapper>} />
             <Route path="/setup-profile" element={<PageWrapper><SetupProfileScreen /></PageWrapper>} />
-            <Route path="/admin/keys" element={<PageWrapper><AdminKeysDashboard /></PageWrapper>} />
+            <Route path="/admin/monitor" element={<PageWrapper><ApiHealthMonitor /></PageWrapper>} />
             <Route path="/admin/create-cards" element={<PageWrapper><AdminCreateCards /></PageWrapper>} />
             <Route path="/category/:categoryName" element={<PageWrapper><CategoryView /></PageWrapper>} />
             <Route path="*" element={<PageWrapper><StudentDashboard /></PageWrapper>} />

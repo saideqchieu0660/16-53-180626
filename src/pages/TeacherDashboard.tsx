@@ -755,10 +755,10 @@ export default function TeacherDashboard() {
            {(user?.role === "teacher" || user?.role === "admin" || user?.role === "Admin") && (
              <div className="hidden md:block">
                <p className="text-sm font-bold opacity-60 uppercase mb-1">System Health</p>
-               <a href="#monitor" className="inline-flex items-center gap-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-100 dark:border-zinc-700 px-4 py-2 rounded-xl transition text-sm font-bold">
+               <Link to="/admin/monitor" className="inline-flex items-center gap-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-100 dark:border-zinc-700 px-4 py-2 rounded-xl transition text-sm font-bold">
                  <Settings className="w-4 h-4" />
-                 Monitor Keys
-               </a>
+                 Giám Sát Hệ Thống & Agent
+               </Link>
              </div>
            )}
         </div>
@@ -767,10 +767,10 @@ export default function TeacherDashboard() {
 
       {(user?.role === "teacher" || user?.role === "admin" || user?.role === "Admin") && (
         <div className="md:hidden flex flex-col gap-2">
-          <a href="#monitor" className="inline-flex items-center gap-2 bg-zinc-100/50 hover:bg-zinc-200/50 text-zinc-900 dark:bg-zinc-800/50 dark:hover:bg-zinc-700/50 dark:text-zinc-100 px-4 py-3 rounded-xl transition text-sm font-bold w-full justify-center border border-zinc-200 dark:border-zinc-800">
+          <Link to="/admin/monitor" className="inline-flex items-center gap-2 bg-zinc-100/50 hover:bg-zinc-200/50 text-zinc-900 dark:bg-zinc-800/50 dark:hover:bg-zinc-700/50 dark:text-zinc-100 px-4 py-3 rounded-xl transition text-sm font-bold w-full justify-center border border-zinc-200 dark:border-zinc-800">
             <Settings className="w-4 h-4" />
-            API Keys Health Monitor
-          </a>
+            Giám Sát Hệ Thống & Agent
+          </Link>
           <button
              onClick={async () => {
                 try {

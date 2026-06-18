@@ -1679,7 +1679,7 @@ export function ServiceMonitor({ adminKey, isOpen = true }: { adminKey: string, 
   }
 }
 
-export default function AdminKeysDashboard() {
+export default function ApiHealthMonitor() {
   const [adminKey, setAdminKey] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -1779,7 +1779,7 @@ export default function AdminKeysDashboard() {
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-display font-bold flex items-center gap-3">
           <Key className="w-8 h-8 text-orange-500" />
-          Admin Dashboard (Control Room)
+          Giám Sát Hệ Thống & Agent
         </h1>
       </div>
 
